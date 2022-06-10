@@ -11,7 +11,7 @@ const float ballRetention = 0.95;
 const float groundFriction = 0.7;
 const float airFriction = 1;
 
-PhysicSolver physicSolver;
+PhysicsSolver physicsSolver;
 bool focusing = false;
 Star* focus;
 Color oldColor;
@@ -46,7 +46,7 @@ int main()
             case Event::MouseButtonPressed:{
                 if (event.mouseButton.button == Mouse::Left)
                 {
-                    for (Star* star : physicSolver.stars)
+                    for (Star* star : physicsSolver.stars)
                     {
                         if (star->getHitbox().contains(window.mapPixelToCoords(Vector2i(event.mouseButton.x, event.mouseButton.y))))
                         {

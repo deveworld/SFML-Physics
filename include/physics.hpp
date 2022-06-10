@@ -11,16 +11,17 @@ extern const int WINDOW_X, WINDOW_Y;
 extern const float ballRetention, wallRetention, groundFriction, airFriction;
 extern float speed;
 
-struct PhysicSolver
+struct PhysicsSolver
 {
     std::vector<Star*>           stars;
     uint32_t                     sub_steps;
     float                        frame_dt;
     Vector gravity =             Vector(0, 10);
 
-    PhysicSolver()
-    : sub_steps(2)
-    {}
+    PhysicsSolver()
+    {
+        sub_steps = 2;
+    }
 
     void addStar(Star* star)
     {

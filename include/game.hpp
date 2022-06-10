@@ -5,7 +5,7 @@
 #include "star.hpp"
 #include "physics.hpp"
 
-extern PhysicSolver physicSolver;
+extern PhysicsSolver physicsSolver;
 extern bool focusing;
 extern Star* focus;
 extern double zoom;
@@ -35,7 +35,7 @@ void GameThread(sf::RenderWindow *window)
         star->setPosition(Vector(x(rng), y(rng)));
         // star->setPosition(Vector(100, 100));
         star->setColor(Color(color(rng), color(rng), color(rng)));
-        physicSolver.addStar(star);
+        physicsSolver.addStar(star);
     }
 
     RectangleShape wall(Vector2f(WINDOW_X, WINDOW_Y));
@@ -59,16 +59,16 @@ void GameThread(sf::RenderWindow *window)
         // star->impulse(Vector(impulse(rng), impulse(rng)));
         // star->setPosition(Vector(100, 100));
         // star->setColor(Color(color(rng), color(rng), color(rng)));
-        // physicSolver.addStar(star);
+        // physicsSolver.addStar(star);
 
         physicsClock.restart();
-        physicSolver.solve(dtClock.restart().asSeconds() * speed);
+        physicsSolver.solve(dtClock.restart().asSeconds() * speed);
         // std::cout << "Physics: " << physicsClock.restart().asMilliseconds() << "ms" << std::endl; 
 
         renderClock.restart();
         window->clear(Color::Black);
         window->draw(wall);
-        for (Star* star : physicSolver.stars)
+        for (Star* star : physicsSolver.stars)
         {
             window->draw(star->star);
         }
@@ -82,13 +82,13 @@ void GameThread(sf::RenderWindow *window)
 
             float size = sqrt(view.getSize().x * view.getSize().x + view.getSize().y * view.getSize().y) / 4500;
 
-            // std::pair<bool, bool> collidePair = physicSolver.isWallCollide(focus);//(physicSolver.isWallCollide(focus).first || ) ? "True" : "False");
+            // std::pair<bool, bool> collidePair = physicsSolver.isWallCollide(focus);//(physicsSolver.isWallCollide(focus).first || ) ? "True" : "False");
             // std::string collide((collidePair.first || collidePair.second) ? "True" : "False");
 
-            // std::string collide(physicSolver.isCollide(focus) ? "True" : "False");
+            // std::string collide(physicsSolver.isCollide(focus) ? "True" : "False");
             // Text isCollide("IsCollide : " + collide, font, 100);
 
-            std::string collide(physicSolver.onGround(focus) ? "True" : "False");
+            std::string collide(physicsSolver.onGround(focus) ? "True" : "False");
             Text isCollide("OnGround : " + collide, font, 100);
             isCollide.setScale(size, size);
             isCollide.setPosition(topLeft);
