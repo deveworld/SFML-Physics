@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(sfml-first VERSION 0.1.0)
+project(sfml-physics VERSION 0.1.0)
 
 set(SFML_VERSION "2.5.1")
 
