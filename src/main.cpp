@@ -7,28 +7,37 @@
 
 const int WINDOW_X      = 1500;
 const int WINDOW_Y      = 1000;
-const int MAX_FPS       = 120;
+const int MAX_FPS       = 144;
+const int POLYGON       = 64;
 
 int SPEED               = 1;
-const int MAX_SPEED     = 5;
+const int MAX_SPEED     = 1000;
 
 void renderThread(Renderer* renderer, PhysicsSolver* physicsSolver) {
     renderer->window.setActive(true);
 
-    int32_t sink = 0;
     sf::Clock clock;
+    sf::Clock physicsClock;
+    sf::Clock renderClock;
+
+    int32_t renderDt;
     while (renderer->running)
     {
-        int32_t dt = clock.restart().asMilliseconds();
+        int32_t dt = clock.restart().asMicroseconds();
         
+        physicsClock.restart();
         for (int i = 0; i < SPEED; i++)
         {
             physicsSolver->solve(dt);
         }
-        renderer->draw();
-        sink = (1000/MAX_FPS) - dt;
-        if (sink < 0) sink = 0;
-        std::this_thread::sleep_for(std::chrono::milliseconds(sink));
+        int32_t physicsDt = physicsClock.restart().asMilliseconds();
+
+        renderClock.restart();
+        renderer->clear();
+        renderer->drawStars();
+        renderer->drawDebug(dt, physicsDt, renderDt);
+        renderer->display();
+        renderDt = renderClock.restart().asMilliseconds();
     }
     renderer->window.setActive(false);
     renderer->playing = false;

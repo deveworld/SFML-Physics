@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <renderer.hpp>
 #include <star.hpp>
+#include <random.hpp>
 
 extern const int WINDOW_X, WINDOW_Y;
 
@@ -16,24 +17,32 @@ struct PhysicsSolver
     private:
         int32_t dt;
         Renderer* renderer;
-        // void calculate();
 };
 
 PhysicsSolver::PhysicsSolver(Renderer* renderer_)
 : renderer(renderer_)
 {
-    Star* star = new Star();
-    renderer->stars.push_back(star);
-
-    sf::RectangleShape wallShape(sf::Vector2f(WINDOW_X, WINDOW_Y));
-    wallShape.setFillColor(sf::Color(0, 0, 0, 0));
-    wallShape.setOutlineColor(sf::Color(0, 255, 0));
-    wallShape.setOutlineThickness(7);
-
-    renderer->wall = wallShape;
+    RNG rng(WINDOW_X, WINDOW_Y);
+    for (size_t i = 0; i < 50; i++)
+    {
+        Star* star = new Star(24);
+        star->setColor(rng.randomColor());
+        star->setPosition(rng.randomPosition());
+        star->setVelocity(rng.randomVelocity());
+        renderer->stars.push_back(star);
+    }
 }
 
 void PhysicsSolver::solve(int32_t dt_)
 {
     dt = dt_;
+    for (auto &&star : renderer->stars)
+    {
+        star->update(dt);
+        for (auto &&star2 : renderer->stars)
+        {
+            if (star->isCollision(star2)) star->solveCollision(star2);
+        }
+        star->wallSolve();
+    }
 }
